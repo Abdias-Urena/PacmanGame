@@ -61,6 +61,7 @@ public class tablero extends JPanel implements ActionListener {
     private Image pacman1, pacman2Arriba, pacman2Izquierda, pacman2Derecha, pacman2Abajo,ghostDie;
     private Image pacman3Arriba, pacman3Abajo, pacman3Izquierda, pacman3Derecha;
     private Image pacman4Arriba, pacman4Abajo, pacman4Izquierda, pacman4Derecha;
+    private Image pantallaInicio;
 
     private int pacmanx, pacmany, pacmandx, pacmandy;
     private int reqdx, reqdy, viewdx, viewdy;
@@ -106,12 +107,15 @@ public class tablero extends JPanel implements ActionListener {
     }
 
     private void mostrarPantallaIntro(Graphics2D g2d) {
-
+        if (!enJuego) {
+            int anchoImagen = 380;
+            int altoImagen = 420;
+            g2d.drawImage(pantallaInicio, 0, 0, anchoImagen, altoImagen, this);
+        }
         g2d.setColor(new Color(0, 32, 48));
         g2d.fillRect(50, tamanioPantalla / 2 - 30, tamanioPantalla - 100, 50);
         g2d.setColor(Color.white);
         g2d.drawRect(50, tamanioPantalla / 2 - 30, tamanioPantalla - 100, 50);
-
         String s = "Presiona p para empezar.";
         Font fuente = new Font("Helvetica", Font.BOLD, 15);
         FontMetrics metr = this.getFontMetrics(fuente);
@@ -557,7 +561,7 @@ public class tablero extends JPanel implements ActionListener {
     }
 
     private void loadImages() {
-
+        pantallaInicio = new ImageIcon(getClass().getResource("../images/intro.png")).getImage();
         imagenesFantasmas.add(new ImageIcon(getClass().getResource("../images/ghost_teal.png")).getImage());
         imagenesFantasmas.add(new ImageIcon(getClass().getResource("../images/ghost_orange.png")).getImage());
         imagenesFantasmas.add(new ImageIcon(getClass().getResource("../images/ghost_pink.png")).getImage());
