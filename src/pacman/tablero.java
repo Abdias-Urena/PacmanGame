@@ -37,7 +37,7 @@ public class tablero extends JPanel implements ActionListener {
     private boolean muriendo = false;
 
     private final int tamanioBloque = 24;// Celda de la matriz
-    private final int cantidadBloques = 15;
+    private final int cantidadBloques = 25;
     private final int tamanioPantalla = cantidadBloques * tamanioBloque;
     private final int retrasoAnimacionPacman = 2;
     private final int contadorAnimacionPacman = 4;
@@ -67,22 +67,31 @@ public class tablero extends JPanel implements ActionListener {
     private int reqdx, reqdy, viewdx, viewdy;
 
     private final short datosNivel[] = {
-            19, 26, 26, 26, 18, 18, 18, 18, 18, 18, 18, 18, 26, 26, 22,
-            21, 0, 0, 0, 17, 16, 16, 16, 16, 16, 16, 16, 0, 0, 20,
-            21, 0, 0, 0, 17, 16, 16, 16, 16, 16, 16, 16, 0, 0, 20,
-            21, 0, 0, 0, 17, 16, 16, 24, 16, 16, 16, 16, 0, 0, 20,
-            17, 18, 18, 18, 16, 16, 20, 0, 17, 16, 16, 16, 18, 18, 20,
-            17, 16, 16, 16, 16, 16, 20, 0, 17, 16, 16, 16, 16, 16, 20,
-            25, 16, 16, 16, 24, 24, 28, 0, 25, 24, 24, 16, 16, 20, 21,
-            1, 17, 16, 20, 0, 0, 0, 0, 0, 0, 0, 17, 16, 20, 21,
-            1, 17, 16, 16, 18, 18, 18, 18, 18, 18, 18, 16, 16, 20, 21,
-            1, 17, 16, 16, 16, 16, 16, 16, 16, 64, 16, 16, 16, 20, 21,
-            1, 17, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 20, 21,
-            1, 17, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 20, 21,
-            1, 17, 16, 16, 16, 16, 16, 24, 16, 16, 16, 16, 16, 20, 21,
-            1, 17, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 20, 21,
-            1, 25, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 28,
-            9, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8
+        19, 26, 26, 26, 26, 18, 26, 26, 26, 26, 26, 22,  0,  0,  0, 19, 26, 26, 26, 26, 26, 18, 26, 26, 22,
+        21,  0,  0,  0,  0, 21,  0,  0,  0,  0,  0, 21,  0,  0,  0, 21,  0,  0,  0,  0,  0, 21,  0,  0, 21,
+        21,  0,  0,  0,  0, 21,  0,  0,  0,  0,  0, 21,  0,  0,  0, 21,  0,  0,  0,  0,  0, 21,  0,  0, 21,
+        21,  0,  0,  0,  0, 21,  0,  0,  0,  0,  0, 21,  0,  0,  0, 21,  0,  0,  0,  0,  0, 21,  0,  0, 21,
+        17, 26, 26, 26, 26, 16, 26, 26, 18, 26, 26, 24, 26, 26, 26, 24, 26, 26, 18, 26, 26, 16, 26, 26, 20,
+        21,  0,  0,  0,  0, 21,  0,  0, 21,  0,  0,  0,  0,  0,  0,  0,  0,  0, 21,  0,  0, 21,  0,  0, 21,
+        21,  0,  0,  0,  0, 21,  0,  0, 25, 26, 18, 18, 22,  0, 19, 18, 18, 26, 28,  0,  0, 21,  0,  0, 21,
+        25, 26, 26, 26, 26, 20,  0,  0,  0,  0, 17, 16, 20,  0, 17, 16, 20,  0,  0,  0,  0, 21,  0,  0, 21,
+         0,  0,  0,  0,  0, 21,  0,  0,  0,  0, 17, 16, 20,  0, 17, 16, 20,  0,  0,  0,  0, 17, 26, 26, 28,
+         0,  0,  0,  0,  0, 21,  0,  0, 19, 18, 24, 24, 24, 26, 24, 24, 24, 18, 22,  0,  0, 21,  0,  0,  0,
+         0,  0,  0,  0,  0, 21,  0,  0, 17, 20,  3,  2,  2,  0,  2,  2,  6, 17, 20,  0,  0, 21,  0,  0,  0,
+         0,  0,  0,  0,  0, 21,  0,  0, 17, 20,  1,  0,  0,  0,  0,  0,  4, 17, 20,  0,  0, 21,  0,  0,  0,
+        27, 26, 26, 26, 26, 16, 26, 26, 16, 20,  1,  0,  0,  0,  0,  0,  4, 17, 16, 26, 26, 24, 26, 26, 30,
+         0,  0,  0,  0,  0, 21,  0,  0, 17, 20,  1,  0,  0,  0,  0,  0,  4, 17, 20,  0,  0,  0,  0,  0,  0,
+         0,  0,  0,  0,  0, 21,  0,  0, 17, 20,  9,  8,  8,  8,  8,  8,  12, 17, 20,  0,  0,  0,  0,  0,  0,
+         0,  0,  0,  0,  0, 21,  0,  0, 17, 24, 26, 26, 26, 26, 26, 26, 26, 24, 24, 18, 26, 26, 26, 26, 30,
+        19, 26, 26, 26, 26, 16, 26, 18, 20,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0, 21,  0,  0,  0,  0,  0,
+        21,  0,  0,  0,  0, 21,  0, 17, 16, 18, 18, 18, 22,  0, 19, 18, 18, 18, 18, 16, 18, 18, 18, 18, 22,
+        25, 26, 22,  0,  0, 21,  0, 17, 24, 24, 24, 24, 24, 26, 24, 24, 24, 24, 24, 16, 24, 24, 16, 24, 28,
+         0,  0, 21,  0,  0, 21,  0, 21,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0, 21,  0,  0, 21,  0,  0,
+        19, 26, 24, 18, 18, 20,  0, 17, 18, 18, 18, 18, 22,  0, 19, 26, 26, 26, 18, 20,  0,  0, 17, 18, 22,
+        21,  0,  0, 17, 16, 20,  0, 17, 16, 16, 16, 16, 20,  0, 21,  0,  0,  0, 17, 20,  0,  0, 17, 16, 20,
+        21,  0,  0, 25, 24, 28,  0, 25, 24, 24, 16, 16, 20,  0, 21,  0,  0,  0, 25, 24, 26, 26, 24, 24, 20,
+        21,  0,  0,  0,  0,  0,  0,  0,  0,  0, 17, 16, 20,  0, 21,  0,  0,  0,  0,  0,  0,  0,  0,  0, 21,
+        25, 26, 26, 26, 26, 26, 26, 26, 26, 26, 24, 24, 24, 26, 24, 26, 26, 26, 26, 26, 26, 26, 26, 26, 28
     };
 
 
@@ -108,8 +117,8 @@ public class tablero extends JPanel implements ActionListener {
 
     private void mostrarPantallaIntro(Graphics2D g2d) {
         if (!enJuego) {
-            int anchoImagen = 380;
-            int altoImagen = 420;
+            int anchoImagen = 620;
+            int altoImagen = 680;
             g2d.drawImage(pantallaInicio, 0, 0, anchoImagen, altoImagen, this);
         }
         g2d.setColor(new Color(0, 32, 48));
@@ -512,20 +521,27 @@ public class tablero extends JPanel implements ActionListener {
 
     private void initLevel() {
 
-        int i;
-        for (i = 0; i < cantidadBloques * cantidadBloques; i++) {
-            datosPantalla[i] = datosNivel[i];
-        }
-        for (int j = 0; j < cantidadFantasmas; j++) {
-            posiciónFantasmasY.add(4 * tamanioBloque);
-            posiciónFantasmasX.add(4 * tamanioBloque);
-            direcciónFantasmasY.add(0);
-            direcciónFantasmasX.add(1);
-            velocidadFantasmas.add(currentspeed);
-            fantasmasMuriendo.add(false);
-        }
-        continueLevel();
+    int i;
+    for (i = 0; i < cantidadBloques * cantidadBloques; i++) {
+        datosPantalla[i] = datosNivel[i];
     }
+
+    // Aquí se debe cargar la imagen del nuevo fantasma que deseas agregar
+    Image nuevoFantasmaImg = new ImageIcon(getClass().getResource("../images/ghost_die.png")).getImage();
+
+    while (posiciónFantasmasX.size() < cantidadFantasmas) {
+        posiciónFantasmasY.add(14 * tamanioBloque); // Ajusta estos valores como sea necesario
+        posiciónFantasmasX.add(14 * tamanioBloque); // Ajusta estos valores como sea necesario
+        direcciónFantasmasY.add(0);
+        direcciónFantasmasX.add(1); // O la dirección inicial que desees
+        velocidadFantasmas.add(currentspeed); // Asegúrate de que currentspeed sea el valor adecuado
+        fantasmasMuriendo.add(false); // Nuevo fantasma no está muriendo
+        imagenesFantasmas.add(nuevoFantasmaImg); // Añadir la imagen del nuevo fantasma
+    }
+
+    continueLevel();
+}
+
 
     private void continueLevel() {
 
@@ -535,8 +551,8 @@ public class tablero extends JPanel implements ActionListener {
 
         for (i = 0; i < cantidadFantasmas; i++) {
 
-            posiciónFantasmasY.set(i, 4 * tamanioBloque);
-            posiciónFantasmasX.set(i, 4 * tamanioBloque);
+            posiciónFantasmasY.set(i, 14 * tamanioBloque);
+            posiciónFantasmasX.set(i, 14 * tamanioBloque);
             direcciónFantasmasY.set(i, 0);
             direcciónFantasmasX.set(i, dx);
             dx = -dx;
@@ -549,8 +565,8 @@ public class tablero extends JPanel implements ActionListener {
             velocidadFantasmas.set(i, velocidadesValidas[random]);
         }
 
-        pacmanx = 7 * tamanioBloque;
-        pacmany = 11 * tamanioBloque;
+        pacmanx = 13 * tamanioBloque;
+        pacmany = 15 * tamanioBloque;
         pacmandx = 0;
         pacmandy = 0;
         reqdx = 0;
