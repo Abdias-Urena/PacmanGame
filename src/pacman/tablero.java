@@ -1,6 +1,5 @@
 package pacman;
 
-import javafx.scene.canvas.GraphicsContext;
 
 import java.awt.BasicStroke;
 import java.awt.Color;
@@ -36,6 +35,8 @@ public class tablero extends JPanel implements ActionListener {
     private final Color colorSuperPastilla = new Color(192, 61, 0);
     private Color colorBloques;
 
+    private Clip clipBucle;
+
     private boolean enJuego = false;
     private boolean muriendo = false;
 
@@ -63,7 +64,7 @@ public class tablero extends JPanel implements ActionListener {
     private ArrayList<Boolean> fantasmasComidos = new ArrayList<Boolean>();
 
 
-    private Image ojosFantasma, pacman1, cherry,pacman2Arriba, pacman2Izquierda, pacman2Derecha, pacman2Abajo, ghostDie, superPill;
+    private Image ojosFantasma, pacman1, cherry, pacman2Arriba, pacman2Izquierda, pacman2Derecha, pacman2Abajo, ghostDie, superPill;
     private Image pacman3Arriba, pacman3Abajo, pacman3Izquierda, pacman3Derecha;
     private Image pacman4Arriba, pacman4Abajo, pacman4Izquierda, pacman4Derecha;
     private Image pantallaInicio;
@@ -84,16 +85,16 @@ public class tablero extends JPanel implements ActionListener {
             0, 0, 0, 0, 0, 21, 0, 0, 19, 18, 24, 24, 24, 26, 24, 24, 24, 18, 22, 0, 0, 21, 0, 0, 0,
             0, 0, 0, 0, 0, 21, 0, 0, 17, 20, 3, 2, 2, 0, 2, 2, 6, 17, 20, 0, 0, 21, 0, 0, 0,
             0, 0, 0, 0, 0, 21, 0, 0, 17, 20, 1, 0, 0, 0, 0, 0, 4, 17, 20, 0, 0, 21, 0, 0, 0,
-            26, 26, 26, 26, 26, 16, 26, 26, 16, 20, 1, 0, 0, 0, 0, 0, 4, 17, 64, 26, 26, 24, 26, 26, 26,
+            26, 26, 26, 26, 26, 16, 26, 26, 16, 20, 1, 0, 0, 0, 0, 0, 4, 17, 16, 26, 26, 24, 26, 26, 26,
             0, 0, 0, 0, 0, 21, 0, 0, 17, 20, 1, 0, 0, 0, 0, 0, 4, 17, 20, 0, 0, 0, 0, 0, 0,
             0, 0, 0, 0, 0, 21, 0, 0, 17, 20, 9, 8, 8, 8, 8, 8, 12, 17, 20, 0, 0, 0, 0, 0, 0,
             0, 0, 0, 0, 0, 21, 0, 0, 17, 24, 26, 26, 26, 26, 26, 26, 26, 24, 24, 18, 26, 26, 26, 26, 30,
             35, 26, 26, 26, 26, 16, 26, 18, 20, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 21, 0, 0, 0, 0, 0,
             21, 0, 0, 0, 0, 21, 0, 17, 16, 18, 18, 18, 22, 0, 19, 18, 18, 18, 18, 16, 18, 18, 18, 18, 22,
-            25, 26, 22, 0, 0, 21, 0, 17, 24, 24, 24, 24, 24, 26, 24, 24, 24, 24, 24, 16, 24, 24, 16, 24, 28,
+            25, 26, 22, 0, 0, 21, 0, 17, 24, 24, 24, 24, 24, 74, 24, 24, 24, 24, 24, 16, 24, 24, 16, 24, 28,
             0, 0, 21, 0, 0, 21, 0, 21, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 21, 0, 0, 21, 0, 0,
             19, 26, 24, 18, 18, 20, 0, 17, 18, 18, 18, 18, 22, 0, 19, 26, 26, 26, 18, 20, 0, 0, 17, 18, 22,
-            21, 0, 0, 17, 64, 20, 0, 17, 16, 16, 16, 16, 20, 0, 21, 0, 0, 0, 17, 20, 0, 0, 17, 32, 20,
+            21, 0, 0, 17, 16, 20, 0, 17, 16, 16, 16, 16, 20, 0, 21, 0, 0, 0, 17, 20, 0, 0, 17, 32, 20,
             21, 0, 0, 25, 24, 28, 0, 25, 24, 24, 16, 16, 20, 0, 21, 0, 0, 0, 25, 24, 26, 26, 24, 24, 20,
             21, 0, 0, 0, 0, 0, 0, 0, 0, 0, 17, 32, 20, 0, 21, 0, 0, 0, 0, 0, 0, 0, 0, 0, 21,
             25, 26, 26, 26, 26, 26, 26, 26, 26, 26, 24, 24, 24, 26, 24, 26, 26, 26, 26, 26, 26, 26, 26, 26, 28
@@ -159,16 +160,43 @@ public class tablero extends JPanel implements ActionListener {
         temporizador = new Timer(40, this);
         temporizador.start();
     }
-    public void playMusic(String musicPath){
-        try{
+
+    public void playMusic(String musicPath,Boolean loop) {
+        try {
             AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(new File(musicPath));
             Clip clip = AudioSystem.getClip();
             clip.open(audioInputStream);
-            clip.start();
-        }catch(UnsupportedAudioFileException | IOException | LineUnavailableException e) {
+            if (loop) {
+                clip.loop(Clip.LOOP_CONTINUOUSLY);
+                clipBucle = clip;
+            }else {
+                clip.start();
+            }
+        } catch (UnsupportedAudioFileException | IOException | LineUnavailableException e) {
             e.printStackTrace();
         }
     }
+
+    public long MusicSecuencial(String musicPath, boolean loop) {
+        try {
+            AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(new File(musicPath));
+            Clip clip = AudioSystem.getClip();
+            clip.open(audioInputStream);
+
+            if (loop) {
+                clip.loop(Clip.LOOP_CONTINUOUSLY);
+            } else {
+                clip.start();
+            }
+
+            return clip.getMicrosecondLength() / 1000; // Devuelve la duración en milisegundos
+        } catch (UnsupportedAudioFileException | IOException | LineUnavailableException e) {
+            e.printStackTrace();
+            return 0;
+        }
+    }
+
+
     @Override
     public void addNotify() {
         super.addNotify();
@@ -343,8 +371,8 @@ public class tablero extends JPanel implements ActionListener {
                     && enJuego && fantasmasMuriendo.get(i) && superPillActive) {
                 fantasmasComidos.set(i, true);
                 puntaje += 300;
-                posiciónFantasmasX.set(i, tamanioBloque);
-                posiciónFantasmasY.set(i, tamanioBloque);
+                posiciónFantasmasX.set(i, 14 * tamanioBloque);
+                posiciónFantasmasY.set(i, 14 * tamanioBloque);
             } else if (pacmanx > (posiciónFantasmasX.get(i) - 12) && pacmanx < (posiciónFantasmasX.get(i) + 12)
                     && pacmany > (posiciónFantasmasY.get(i) - 12) && pacmany < (posiciónFantasmasY.get(i) + 12)
                     && enJuego) {
@@ -387,7 +415,15 @@ public class tablero extends JPanel implements ActionListener {
 
             if ((ch & 32) != 0) {
                 datosPantalla[pos] = (short) (ch & 15);
-                playMusic(getClass().getResource("../music/pacmanDeadth.wav").getPath());
+                long duration = MusicSecuencial(getClass().getResource("../music/pacmanDeadth.wav").getPath(), false);
+                new Thread(() -> {
+                    try {
+                        Thread.sleep(duration);
+                        playMusic(getClass().getResource("../music/ghost-turn-to-blue.wav").getPath(), true);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }).start();
                 superPillActive = true;
                 for (int i = 0; i < cantidadFantasmas; i++) {
                     fantasmasMuriendo.set(i, true);
@@ -398,6 +434,7 @@ public class tablero extends JPanel implements ActionListener {
             if ((ch & 64) != 0) {
                 datosPantalla[pos] = (short) (ch & 15);
                 puntaje += 100;
+                playMusic(getClass().getResource("../music/eatFruit.wav").getPath(),false);
             }
 
             if (reqdx != 0 || reqdy != 0) {
@@ -550,6 +587,7 @@ public class tablero extends JPanel implements ActionListener {
     }
 
     private void initGame() {
+
         pacmansRestantes = 4;
         puntaje = -0;
         initLevel();
@@ -557,6 +595,10 @@ public class tablero extends JPanel implements ActionListener {
         currentspeed = 3;
         tempGhostDie = new Timer(superPillDuration, e -> {
             superPillActive = false;
+            if(clipBucle != null) {
+                clipBucle.stop();
+                clipBucle.close();
+            }
             for (int i = 0; i < cantidadFantasmas; i++) {
                 fantasmasMuriendo.set(i, false);
                 if (fantasmasComidos.get(i)) {
@@ -570,6 +612,7 @@ public class tablero extends JPanel implements ActionListener {
     }
 
     private void initLevel() {
+
         int i;
         for (i = 0; i < cantidadBloques * cantidadBloques; i++) {
             datosPantalla[i] = datosNivel[i];
@@ -713,6 +756,7 @@ public class tablero extends JPanel implements ActionListener {
                 if (key == 'p' || key == 'P') {
                     enJuego = true;
                     initGame();
+                    playMusic(getClass().getResource("../music/gameStart.wav").getPath(),false);
                 }
             }
         }
