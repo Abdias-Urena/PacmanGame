@@ -68,7 +68,11 @@ public class tablero extends JPanel implements ActionListener {
     private Image pacman3Arriba, pacman3Abajo, pacman3Izquierda, pacman3Derecha;
     private Image pacman4Arriba, pacman4Abajo, pacman4Izquierda, pacman4Derecha;
     private Image pantallaInicio;
-
+    private Image lobby;
+    private static final int ESTADO_INICIO = 0;
+    private static final int ESTADO_LOBBY = 1;
+    private static final int ESTADO_JUEGO = 2;
+    private int estadoActual = ESTADO_INICIO;
     private int pacmanx, pacmany, pacmandx, pacmandy;
     private int reqdx, reqdy, viewdx, viewdy;
 
@@ -127,22 +131,59 @@ public class tablero extends JPanel implements ActionListener {
     }
 
     private void mostrarPantallaIntro(Graphics2D g2d) {
-        if (!enJuego) {
-            int anchoImagen = 620;
-            int altoImagen = 680;
-            g2d.drawImage(pantallaInicio, 0, 0, anchoImagen, altoImagen, this);
+        if (estadoActual == ESTADO_INICIO) {
+
+            int anchoImagenInicio = 620;
+            int altoImagenInicio = 680;
+            g2d.drawImage(pantallaInicio, 0, 0, anchoImagenInicio, altoImagenInicio, this);
+
+
+            g2d.setColor(new Color(0, 32, 48));
+            g2d.fillRect(50, tamanioPantalla / 2 - 30, tamanioPantalla - 100, 50);
+            g2d.setColor(Color.white);
+            g2d.drawRect(50, tamanioPantalla / 2 - 30, tamanioPantalla - 100, 50);
+
+            String s = "Presiona p para ir al lobby.";
+            Font fuente = new Font("Helvetica", Font.BOLD, 15);
+            FontMetrics metr = this.getFontMetrics(fuente);
+            g2d.drawString(s, (tamanioPantalla - metr.stringWidth(s)) / 2, tamanioPantalla / 2);
+            g2d.setColor(Color.white);
+            g2d.setFont(fuente);
         }
-        g2d.setColor(new Color(0, 32, 48));
-        g2d.fillRect(50, tamanioPantalla / 2 - 30, tamanioPantalla - 100, 50);
-        g2d.setColor(Color.white);
-        g2d.drawRect(50, tamanioPantalla / 2 - 30, tamanioPantalla - 100, 50);
-        String s = "Presiona p para empezar.";
-        Font fuente = new Font("Helvetica", Font.BOLD, 15);
-        FontMetrics metr = this.getFontMetrics(fuente);
-        g2d.drawString(s, (tamanioPantalla - metr.stringWidth(s)) / 2, tamanioPantalla / 2);
-        g2d.setColor(Color.white);
-        g2d.setFont(fuente);
     }
+
+    private void mostrarPantallaLobby(Graphics2D g2d) {
+        int anchoImagenLobby = 620;
+        int altoImagenLobby = 680;
+        g2d.drawImage(lobby, 0, 0, anchoImagenLobby, altoImagenLobby, this);
+
+        // Configuración inicial para todos los rectángulos
+        int rectX = 100;
+        int rectWidth = tamanioPantalla - 200; // Ancho
+        int rectHeight = 60; // Altura
+
+        String[] opciones = {"Presiona ENTER para jugar.", "Jugador", "Configuración", "Salir"};
+        Font fuente = new Font("Helvetica", Font.BOLD, 15);
+        g2d.setFont(fuente);
+        FontMetrics metr = this.getFontMetrics(fuente);
+
+        for (int i = 0; i < opciones.length; i++) {
+            int rectY = tamanioPantalla / 2 + 30 + (i * 50);
+
+            g2d.setColor(new Color(0, 32, 48));
+            g2d.fillRect(rectX, rectY, rectWidth, rectHeight);
+            g2d.setColor(Color.white);
+            g2d.drawRect(rectX, rectY, rectWidth, rectHeight);
+
+
+            String s = opciones[i];
+            int textoX = rectX + (rectWidth - metr.stringWidth(s)) / 2;
+            int textoY = rectY + ((rectHeight - metr.getHeight()) / 2) + metr.getAscent();
+            g2d.drawString(s, textoX, textoY);
+        }
+    }
+
+
 
     private void inicializarVariables() {
 
@@ -662,6 +703,7 @@ public class tablero extends JPanel implements ActionListener {
     }
 
     private void loadImages() {
+        lobby = new ImageIcon(getClass().getResource("../images/lobby.png")).getImage();
         pantallaInicio = new ImageIcon(getClass().getResource("../images/intro.png")).getImage();
         imagenesFantasmas.add(new ImageIcon(getClass().getResource("../images/ghost_teal.png")).getImage());
         imagenesFantasmas.add(new ImageIcon(getClass().getResource("../images/ghost_orange.png")).getImage());
@@ -700,13 +742,14 @@ public class tablero extends JPanel implements ActionListener {
         g2d.setColor(Color.black);
         g2d.fillRect(0, 0, dimension.width, dimension.height);
 
-        drawMaze(g2d);
-        drawScore(g2d);
-        doAnim();
-
-        if (enJuego) {
+        if (estadoActual == ESTADO_JUEGO && enJuego) {
+            drawMaze(g2d);
+            drawScore(g2d);
+            doAnim();
             playGame(g2d);
-        } else {
+        } else if (estadoActual == ESTADO_LOBBY) {
+            mostrarPantallaLobby(g2d);
+        } else if (estadoActual == ESTADO_INICIO) {
             mostrarPantallaIntro(g2d);
         }
 
@@ -728,7 +771,7 @@ public class tablero extends JPanel implements ActionListener {
 
             int key = e.getKeyCode();
 
-            if (enJuego) {
+            if (estadoActual == ESTADO_JUEGO && enJuego) {
                 if (key == KeyEvent.VK_LEFT) {
                     reqdx = -1;
                     reqdy = 0;
@@ -743,6 +786,7 @@ public class tablero extends JPanel implements ActionListener {
                     reqdy = 1;
                 } else if (key == KeyEvent.VK_ESCAPE && temporizador.isRunning()) {
                     enJuego = false;
+                    estadoActual = ESTADO_INICIO;
                 } else if (key == KeyEvent.VK_PAUSE) {
                     if (temporizador.isRunning()) {
                         temporizador.stop();
@@ -750,11 +794,16 @@ public class tablero extends JPanel implements ActionListener {
                         temporizador.start();
                     }
                 }
-            } else {
+            } else if (estadoActual == ESTADO_INICIO) {
                 if (key == 'p' || key == 'P') {
+                    estadoActual = ESTADO_LOBBY;
+                }
+            } else if (estadoActual == ESTADO_LOBBY) {
+                if (key == KeyEvent.VK_ENTER) {
+                    estadoActual = ESTADO_JUEGO;
                     enJuego = true;
                     initGame();
-                    playMusic(getClass().getResource("../music/gameStart.wav").getPath(),false);
+                    playMusic(getClass().getResource("../music/gameStart.wav").getPath(), false);
                 }
             }
         }
