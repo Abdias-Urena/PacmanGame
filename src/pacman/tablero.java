@@ -169,7 +169,7 @@ public class tablero extends JPanel implements ActionListener {
             if (loop) {
                 clip.loop(Clip.LOOP_CONTINUOUSLY);
                 clipBucle = clip;
-            }else {
+            }else{
                 clip.start();
             }
         } catch (UnsupportedAudioFileException | IOException | LineUnavailableException e) {
@@ -595,10 +595,8 @@ public class tablero extends JPanel implements ActionListener {
         currentspeed = 3;
         tempGhostDie = new Timer(superPillDuration, e -> {
             superPillActive = false;
-            if(clipBucle != null) {
-                clipBucle.stop();
-                clipBucle.close();
-            }
+            clipBucle.stop();
+            clipBucle.close();
             for (int i = 0; i < cantidadFantasmas; i++) {
                 fantasmasMuriendo.set(i, false);
                 if (fantasmasComidos.get(i)) {
