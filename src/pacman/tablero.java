@@ -161,7 +161,7 @@ public class tablero extends JPanel implements ActionListener {
         temporizador.start();
     }
 
-    public void playMusic(String musicPath,Boolean loop) {
+    public void playMusic(String musicPath, Boolean loop) {
         try {
             AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(new File(musicPath));
             Clip clip = AudioSystem.getClip();
@@ -169,7 +169,7 @@ public class tablero extends JPanel implements ActionListener {
             if (loop) {
                 clip.loop(Clip.LOOP_CONTINUOUSLY);
                 clipBucle = clip;
-            }else{
+            } else {
                 clip.start();
             }
         } catch (UnsupportedAudioFileException | IOException | LineUnavailableException e) {
@@ -434,7 +434,7 @@ public class tablero extends JPanel implements ActionListener {
             if ((ch & 64) != 0) {
                 datosPantalla[pos] = (short) (ch & 15);
                 puntaje += 100;
-                playMusic(getClass().getResource("../music/eatFruit.wav").getPath(),false);
+                playMusic(getClass().getResource("../music/eatFruit.wav").getPath(), false);
             }
 
             if (reqdx != 0 || reqdy != 0) {
@@ -448,7 +448,6 @@ public class tablero extends JPanel implements ActionListener {
                     viewdy = pacmandy;
                 }
             }
-
             // Check for standstill
             if ((pacmandx == -1 && pacmandy == 0 && (ch & 1) != 0)
                     || (pacmandx == 1 && pacmandy == 0 && (ch & 4) != 0)
@@ -457,6 +456,19 @@ public class tablero extends JPanel implements ActionListener {
                 pacmandx = 0;
                 pacmandy = 0;
             }
+        }
+        if (pacmanx / tamanioBloque == 24 && pacmany / tamanioBloque == 12) {
+            pacmanx = -1 * tamanioBloque;
+            pacmany = 12 * tamanioBloque;
+        } else if (pacmanx / tamanioBloque == -1 && pacmany / tamanioBloque == 12) {
+            pacmanx = 24 * tamanioBloque;
+            pacmany = 12 * tamanioBloque;
+        }
+        pos = pacmanx / tamanioBloque + cantidadBloques * (int) (pacmany / tamanioBloque);
+        ch = datosPantalla[pos];
+        if ((ch & 16) != 0) {
+            datosPantalla[pos] = (short) (ch & 15);
+            puntaje++;
         }
         pacmanx = pacmanx + velocidadPacman * pacmandx;
         pacmany = pacmany + velocidadPacman * pacmandy;
@@ -548,38 +560,38 @@ public class tablero extends JPanel implements ActionListener {
     private void drawMaze(Graphics2D g2d) {
         short i = 0;
         int x, y;
-        for (y = 0; y < tamanioPantalla; y += tamanioBloque) {
-            for (x = 0; x < tamanioPantalla; x += tamanioBloque) {
+        for (x = 0; x < tamanioPantalla; x += tamanioBloque) {
+            for (y = 0; y < tamanioPantalla; y += tamanioBloque) {
 
                 g2d.setColor(colorBloques);
                 g2d.setStroke(new BasicStroke(2));
 
                 if ((datosPantalla[i] & 1) != 0) {
-                    g2d.drawLine(x, y, x, y + tamanioBloque - 1);
+                    g2d.drawLine(y, x, y, x + tamanioBloque - 1);
                 }
 
                 if ((datosPantalla[i] & 2) != 0) {
-                    g2d.drawLine(x, y, x + tamanioBloque - 1, y);
+                    g2d.drawLine(y, x, y + tamanioBloque - 1, x);
                 }
 
                 if ((datosPantalla[i] & 4) != 0) {
-                    g2d.drawLine(x + tamanioBloque - 1, y, x + tamanioBloque - 1,
-                            y + tamanioBloque - 1);
+                    g2d.drawLine(y + tamanioBloque - 1, x, y + tamanioBloque - 1,
+                            x + tamanioBloque - 1);
                 }
 
                 if ((datosPantalla[i] & 8) != 0) {
-                    g2d.drawLine(x, y + tamanioBloque - 1, x + tamanioBloque - 1,
-                            y + tamanioBloque - 1);
+                    g2d.drawLine(y, x + tamanioBloque - 1, y + tamanioBloque - 1,
+                            x + tamanioBloque - 1);
                 }
                 if ((datosPantalla[i] & 16) != 0) {
                     g2d.setColor(colorPastillas);
-                    g2d.fillRect(x + 11, y + 11, 2, 2);
+                    g2d.fillRect(y + 11, x + 11, 2, 2);
                 }
                 if ((datosPantalla[i] & 32) != 0) {
-                    g2d.drawImage(superPill, x + 3, y + 3, this);
+                    g2d.drawImage(superPill, y + 3, x + 3, this);
                 }
                 if ((datosPantalla[i] & 64) != 0) {
-                    g2d.drawImage(cherry, x + 3, y + 3, this);
+                    g2d.drawImage(cherry, y + 3, x + 3, this);
                 }
                 i++;
             }
@@ -743,7 +755,7 @@ public class tablero extends JPanel implements ActionListener {
                     reqdy = 1;
                 } else if (key == KeyEvent.VK_ESCAPE && temporizador.isRunning()) {
                     enJuego = false;
-                } else if (key == KeyEvent.VK_PAUSE) {
+                } else if (key == KeyEvent.VK_L) {
                     if (temporizador.isRunning()) {
                         temporizador.stop();
                     } else {
@@ -754,7 +766,7 @@ public class tablero extends JPanel implements ActionListener {
                 if (key == 'p' || key == 'P') {
                     enJuego = true;
                     initGame();
-                    playMusic(getClass().getResource("../music/gameStart.wav").getPath(),false);
+                    //playMusic(getClass().getResource("../music/gameStart.wav").getPath(),false);
                 }
             }
         }
