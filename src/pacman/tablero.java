@@ -365,7 +365,13 @@ public class tablero extends JPanel implements ActionListener {
             posiciónFantasmasX.set(i, posiciónFantasmasX.get(i) + (direcciónFantasmasX.get(i) * velocidadFantasmas.get(i)));
             posiciónFantasmasY.set(i, posiciónFantasmasY.get(i) + (direcciónFantasmasY.get(i) * velocidadFantasmas.get(i)));
             drawGhost(g2d, posiciónFantasmasX.get(i) + 1, posiciónFantasmasY.get(i) + 1, i);
-
+            if(posiciónFantasmasX.get(i) / tamanioBloque == 24 && posiciónFantasmasY.get(i) / tamanioBloque == 12){
+                posiciónFantasmasX.set(i, -1 * tamanioBloque);
+                posiciónFantasmasY.set(i, 12 * tamanioBloque);
+            } else if(posiciónFantasmasX.get(i) / tamanioBloque == -1 && posiciónFantasmasY.get(i) / tamanioBloque == 12){
+                posiciónFantasmasX.set(i, 24 * tamanioBloque);
+                posiciónFantasmasY.set(i, 12 * tamanioBloque);
+            }
             if (pacmanx > (posiciónFantasmasX.get(i) - 12) && pacmanx < (posiciónFantasmasX.get(i) + 12)
                     && pacmany > (posiciónFantasmasY.get(i) - 12) && pacmany < (posiciónFantasmasY.get(i) + 12)
                     && enJuego && fantasmasMuriendo.get(i) && superPillActive) {
