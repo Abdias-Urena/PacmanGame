@@ -1,4 +1,4 @@
-package pacman;
+ package pacman;
 
 import java.awt.EventQueue;
 import javax.swing.JFrame;
@@ -15,7 +15,7 @@ public class Pacman extends JFrame {
         add(new tablero());
         setTitle("Los inges supremos");
         setDefaultCloseOperation(EXIT_ON_CLOSE);
-        setSize(380, 420);
+        setSize(620, 680);
         setLocationRelativeTo(null);
         setVisible(true);        
     }
