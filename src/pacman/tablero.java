@@ -661,7 +661,7 @@ public class tablero extends JPanel implements ActionListener {
                 if (fantasmasComidos.get(i)) {
                     fantasmasComidos.set(i, false);
                     posiciónFantasmasX.set(i, 14 * tamanioBloque); // Ajusta la posición según tu configuración del mapa
-                    posiciónFantasmasY.set(i, 14 * tamanioBloque);
+                    posiciónFantasmasY.set(i, 12 * tamanioBloque);
                 }
             }
             tempGhostDie.stop();
