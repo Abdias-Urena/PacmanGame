@@ -394,7 +394,7 @@ public class tablero extends JPanel implements ActionListener {
                         fantasmasComidos.set(i, true);
                         puntaje += 300;
                         posiciónFantasmasX.set(i, 14 * tamanioBloque);
-                        posiciónFantasmasY.set(i, 14 * tamanioBloque);
+                        posiciónFantasmasY.set(i, 12 * tamanioBloque);
                     } else if (pacmanx > (posiciónFantasmasX.get(i) - 12) && pacmanx < (posiciónFantasmasX.get(i) + 12)
                             && pacmany > (posiciónFantasmasY.get(i) - 12) && pacmany < (posiciónFantasmasY.get(i) + 12)
                             && enJuego) {
@@ -419,7 +419,7 @@ public class tablero extends JPanel implements ActionListener {
                 fantasmasComidos.set(i, true);
                 puntaje += 300;
                 posiciónFantasmasX.set(i, 14 * tamanioBloque);
-                posiciónFantasmasY.set(i, 14 * tamanioBloque);
+                posiciónFantasmasY.set(i, 12 * tamanioBloque);
             } else if (pacmanx > (posiciónFantasmasX.get(i) - 12) && pacmanx < (posiciónFantasmasX.get(i) + 12)
                     && pacmany > (posiciónFantasmasY.get(i) - 12) && pacmany < (posiciónFantasmasY.get(i) + 12)
                     && enJuego) {
@@ -804,9 +804,10 @@ public class tablero extends JPanel implements ActionListener {
                     reqdy = 1;
                 } else if (key == KeyEvent.VK_ESCAPE && temporizador.isRunning()) {
                     enJuego = false;
+                    estadoActual = ESTADO_LOBBY;
                 } else if (key == KeyEvent.VK_L) {
                     estadoActual = ESTADO_INICIO;
-                } else if (key == KeyEvent.VK_PAUSE) {
+                } else if (key == KeyEvent.VK_0) {
                     if (temporizador.isRunning()) {
                         temporizador.stop();
                     } else {
