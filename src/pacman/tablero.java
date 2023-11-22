@@ -804,12 +804,9 @@ public class tablero extends JPanel implements ActionListener {
                     reqdy = 1;
                 } else if (key == KeyEvent.VK_ESCAPE && temporizador.isRunning()) {
                     enJuego = false;
-<<<<<<< HEAD
                 } else if (key == KeyEvent.VK_L) {
-=======
                     estadoActual = ESTADO_INICIO;
                 } else if (key == KeyEvent.VK_PAUSE) {
->>>>>>> origin/yeiko
                     if (temporizador.isRunning()) {
                         temporizador.stop();
                     } else {
@@ -825,11 +822,7 @@ public class tablero extends JPanel implements ActionListener {
                     estadoActual = ESTADO_JUEGO;
                     enJuego = true;
                     initGame();
-<<<<<<< HEAD
-                    //playMusic(getClass().getResource("../music/gameStart.wav").getPath(),false);
-=======
                     playMusic(getClass().getResource("../music/gameStart.wav").getPath(), false);
->>>>>>> origin/yeiko
                 }
             }
         }
